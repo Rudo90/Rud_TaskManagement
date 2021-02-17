@@ -23,7 +23,7 @@ public class TaskManager {
 
     public void addTask(Task task) {
 
-        String query = "INSERT INTO tasks (id, title, description, status, deadline, user) VALUES (?,?,?,?,?,?)";
+        String query = "INSERT INTO alltasks (id, title, description, status, deadline, user) VALUES (?,?,?,?,?,?)";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, task.getId());
@@ -38,13 +38,12 @@ public class TaskManager {
         }
     }
 
-    public Task updateTaskStatus (TaskStatusEnum e){
+    public Task updateTaskStatus (int id, String title, String desc, String stat, Date deadline, String user){
 
-        String sql = "UPDATE tasks SET status = '" + e + "' + WHERE user = '" + task.getEmail() + "'";
+        String sql = "UPDATE alltasks SET status = '" + stat + "'" + "WHERE id=" + id + " AND title='" + title +
+                "' AND description='" + desc + "' AND deadline='" + sdf.format(deadline) + "' AND user='" + user + "'";
         try {
-            Task task = new Task();
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(4, task.getStatus().name());
             statement.executeUpdate();
             return task;
         } catch (SQLException throwables) {
@@ -54,24 +53,14 @@ public class TaskManager {
     }
 
 
-
     public List<Task> getTaskByUser (String email){
 
         List<Task> list = new ArrayList<>();
-        String sql = "SELECT * from tasks WHERE user = '" + email + "'";
+        String sql = "SELECT * from alltasks WHERE user = '" + email + "'";
         try {
             PreparedStatement stat = conn.prepareStatement(sql);
             ResultSet rs = stat.executeQuery(sql);
             while (rs.next()){
-//                Task task = new Task();
-//                task.setId(rs.getInt(1));
-//                task.setTitle(rs.getString(2));
-//                task.setDescription(rs.getString(3));
-//                task.setStatus(rs.getString(4));
-//                String deadline = rs.getString(5);
-//                Date date = sdf.parse(deadline);
-//                task.setDeadline(date);
-//                task.setEmail(rs.getString(6));
                 int id = rs.getInt(1);
                 String title = rs.getString(2);
                 String description = rs.getString(3);
@@ -90,38 +79,11 @@ public class TaskManager {
         }
             return null;
     }
-
-//    public Task getTask(String title) {
-//
-//        String query = "SELECT * from tasks WHERE title = '" + title + "'";
-//        try {
-//            PreparedStatement statement = conn.prepareStatement(query);
-//            ResultSet rs = statement.executeQuery(query);
-//            while (rs.next()) {
-//                Task task = new Task();
-//                task.setId(rs.getInt(1));
-//                task.setTitle(rs.getString(2));
-//                task.setDescription(rs.getString(3));
-//                task.setStatus(rs.getString(4));
-//                String deadline = rs.getString(5);
-//                Date date = sdf.parse(deadline);
-//                task.setDeadline(date);
-//                task.setEmail(user.getEmail());
-//                return task;
-//            }
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
     public List<Task> getAllTasks() {
 
         List<Task> list = new ArrayList<>();
         try {
-            String query = "Select * from tasks";
+            String query = "Select * from alltasks";
             PreparedStatement stat = conn.prepareStatement(query);
             ResultSet rs = stat.executeQuery(query);
             while (rs.next()) {
@@ -143,16 +105,4 @@ public class TaskManager {
         }
         return null;
     }
-
-//    public void deleteTask(String title) {
-//
-//        try {
-//            String sql = "Delete from tasks where title='" + title + "'";
-//            PreparedStatement stat = conn.prepareStatement(sql);
-//            stat.executeUpdate();
-//            System.out.println("Task was deleted successfully!");
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-//    }
 }

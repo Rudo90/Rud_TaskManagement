@@ -48,15 +48,5 @@ public class LoginServlet extends HttpServlet {
                 resp.sendRedirect("UserHome.jsp");
             }
         }
-
-//        for (User users : allUsersList) {
-//            if (!users.getEmail().equals(req.getParameter("email"))
-//                    && !users.getPassword().equals(req.getParameter("password"))) {
-//                String message = "email or password is invalid";
-//                req.setAttribute("message", message);
-//                req.getRequestDispatcher("/").forward(req, resp);
-//            }
-//        }
-
     }
 }
